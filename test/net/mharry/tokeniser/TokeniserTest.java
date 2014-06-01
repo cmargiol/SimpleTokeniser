@@ -14,48 +14,48 @@ public class TokeniserTest {
     
     @Test
     public void testDotInAWord() {
-    	res = new TokenMap();
-    	int loc = t.addNextToken("e.g.,", 0, 0, res);
-    	assertTrue(loc == 4);
-    	assertTrue(res.containsKey("e.g."));
+        res = new TokenMap();
+        int loc = t.addNextToken("e.g.,", 0, 0, res);
+        assertTrue(loc == 4);
+        assertTrue(res.containsKey("e.g."));
     }
 
     @Test
     public void testNotAToken() {
-    	res = new TokenMap();
-    	int loc = t.addNextToken("###,", 0, 0, res);
-    	assertTrue(loc == 3);
-    	assertTrue(res.isEmpty());
+        res = new TokenMap();
+        int loc = t.addNextToken("###,", 0, 0, res);
+        assertTrue(loc == 3);
+        assertTrue(res.isEmpty());
     }
 
     @Test
     public void testHashTag() {
-    	res = new TokenMap();
-    	t.addNextToken("#testing", 0, 0, res);
-    	assertTrue(res.containsKey("#testing"));
+        res = new TokenMap();
+        t.addNextToken("#testing", 0, 0, res);
+        assertTrue(res.containsKey("#testing"));
     }
 
     @Test
     public void testAddNextTokenDot() {
-    	res = new TokenMap();
-    	int loc = t.addNextToken("test.", 0, 0, res);
-    	assertTrue(loc == 3);
+        res = new TokenMap();
+        int loc = t.addNextToken("test.", 0, 0, res);
+        assertTrue(loc == 3);
     }
 
     @Test
     public void testAddNextTokenReturnLoc() {
-    	res = new TokenMap();
-    	int loc = t.addNextToken("- ", 0, 0, res);
-    	assertTrue(loc == 0);
-    	assertTrue(res.isEmpty());
+        res = new TokenMap();
+        int loc = t.addNextToken("- ", 0, 0, res);
+        assertTrue(loc == 0);
+        assertTrue(res.isEmpty());
     }
 
     @Test
     public void testIgnoreWhitespace() {
-    	res = t.lex("    test");
-    	assertTrue(res.size()==1);
-    	assertTrue(null == res.get(" "));
-    	assertTrue(Arrays.equals(res.get("test").toArray(), new Integer[]{0}));
+        res = t.lex("    test");
+        assertTrue(res.size()==1);
+        assertTrue(null == res.get(" "));
+        assertTrue(Arrays.equals(res.get("test").toArray(), new Integer[]{0}));
     }
 
     @Test
@@ -136,8 +136,8 @@ public class TokeniserTest {
 
     @Test
     public void testHyphenNotSentence() {
-    	res = t.lex("Two sentences. - . Not three");
-    	assertTrue(Arrays.equals(res.get("three").toArray(), new Integer[]{1}));
+        res = t.lex("Two sentences. - . Not three");
+        assertTrue(Arrays.equals(res.get("three").toArray(), new Integer[]{1}));
     }
 
     @Test

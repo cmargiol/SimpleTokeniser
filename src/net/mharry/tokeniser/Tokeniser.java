@@ -18,13 +18,13 @@ public class Tokeniser {
         for (int loc=0; loc < text.length(); loc++) {
             char c = text.charAt(loc);
             if (Character.isWhitespace(c)) {
-            	continue;
+                continue;
             } else if (SENTENCE_DELIMS.contains(Character.toString(c))){
-            	if (tokensB4CurSentence < tokens.size()) {
-                	// only count a sentence if the previous one had any tokens
-                	sentenceCount++;
-                	tokensB4CurSentence = tokens.size();
-            	}
+                if (tokensB4CurSentence < tokens.size()) {
+                    // only count a sentence if the previous one had any tokens
+                    sentenceCount++;
+                    tokensB4CurSentence = tokens.size();
+                }
             } else {
                 loc = addNextToken(text, loc, sentenceCount, tokens);
             }
@@ -44,31 +44,31 @@ public class Tokeniser {
      * 
      * @return The location of the last character dealt with
      */
-	 int addNextToken(String text, int loc, int curSentence, TokenMap tokens) {
+     int addNextToken(String text, int loc, int curSentence, TokenMap tokens) {
         StringBuffer sb = new StringBuffer();
         boolean hasLetter = false;
 
         for ( ; loc < text.length(); loc++) {
-        	char c = text.charAt(loc);
+            char c = text.charAt(loc);
              if (c == '.') { //special treatment to cover for tokens like "e.g."
                  if (loc == text.length()-1 
                          || Character.isWhitespace(text.charAt(loc+1)) 
                          || text.charAt(loc+1)== '.') {
-                	 loc--; // we don't want to deal with sentence delimiters
+                     loc--; // we don't want to deal with sentence delimiters
                      break;
                  }
              } else if (Character.isWhitespace(c) || (SENTENCE_DELIMS).contains(Character.toString(c))) {
-            	 loc--;
-            	 break;
+                 loc--;
+                 break;
              } else if (DELIMS.contains(Character.toString(c))){
-            	 break;
+                 break;
              }
 
              if (Character.isLetter(c)) hasLetter = true;
              sb.append(c);
         }
         if (sb.length() > 0 && hasLetter) {
-        	tokens.put(sb.toString(), curSentence);
+            tokens.put(sb.toString(), curSentence);
         }
         return loc;
     }

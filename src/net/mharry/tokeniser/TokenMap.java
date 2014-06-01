@@ -42,7 +42,7 @@ public class TokenMap extends TreeMap<String, ArrayList<Integer>> {
 
     @Override
     public String toString() {
-    	StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
         for (Map.Entry<String, ArrayList<Integer>> entry : entrySet()) {
             sb.append(String.format("%-25s %s\n",
                     entry.getKey(), 
