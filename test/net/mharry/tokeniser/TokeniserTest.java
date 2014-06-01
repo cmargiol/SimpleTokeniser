@@ -3,21 +3,64 @@ package net.mharry.tokeniser;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.SortedMap;
 
 import org.junit.Test;
 
 public class TokeniserTest {
 
     Tokeniser t = new Tokeniser();
-    SortedMap<String, ArrayList<Integer>> res;
+    TokenMap res;
     
     @Test
+    public void testDotInAWord() {
+    	res = new TokenMap();
+    	int loc = t.addNextToken("e.g.,", 0, 0, res);
+    	assertTrue(loc == 4);
+    	assertTrue(res.containsKey("e.g."));
+    }
+
+    @Test
+    public void testNotAToken() {
+    	res = new TokenMap();
+    	int loc = t.addNextToken("###,", 0, 0, res);
+    	assertTrue(loc == 3);
+    	assertTrue(res.isEmpty());
+    }
+
+    @Test
+    public void testHashTag() {
+    	res = new TokenMap();
+    	t.addNextToken("#testing", 0, 0, res);
+    	assertTrue(res.containsKey("#testing"));
+    }
+
+    @Test
+    public void testAddNextTokenDot() {
+    	res = new TokenMap();
+    	int loc = t.addNextToken("test.", 0, 0, res);
+    	assertTrue(loc == 3);
+    }
+
+    @Test
+    public void testAddNextTokenReturnLoc() {
+    	res = new TokenMap();
+    	int loc = t.addNextToken("- ", 0, 0, res);
+    	assertTrue(loc == 0);
+    	assertTrue(res.isEmpty());
+    }
+
+    @Test
+    public void testIgnoreWhitespace() {
+    	res = t.lex("    test");
+    	assertTrue(res.size()==1);
+    	assertTrue(null == res.get(" "));
+    	assertTrue(Arrays.equals(res.get("test").toArray(), new Integer[]{0}));
+    }
+
+    @Test
     public void testSimple() {
-        res = t.lex("this is a test");        
+        res = t.lex("this is a test");
         assertTrue(res.size()==4);
     }
 
@@ -49,8 +92,8 @@ public class TokeniserTest {
     }
     
     @Test
-    public void testEG () {
-        res = t.lex("here's a tricky one for you e.g.,");
+    public void testEGInSentence () {
+        res = t.lex("here's a tricky one for you e.g., this");
         assertTrue(res.get("e.g.").size()==1);
     }
     
@@ -63,15 +106,10 @@ public class TokeniserTest {
     
     @Test 
     public void testTweet() {
-        String text = "Friday today - how about this song? #fridaysong";
+        String text = "Friday today - how about this song? #fridaysong #weekendftw";
         res = t.lex(text);
         assertTrue(res.containsKey("#fridaysong"));
-    }
-    
-    @Test 
-    public void testTrimmer() {
-        String token = "!!!-finally,[]{}.!()?!";
-        assertTrue(t.trimToken(token).equals("finally"));
+        assertTrue(res.containsKey("#weekendftw"));
     }
 
     @Test
@@ -97,6 +135,12 @@ public class TokeniserTest {
     }
 
     @Test
+    public void testHyphenNotSentence() {
+    	res = t.lex("Two sentences. - . Not three");
+    	assertTrue(Arrays.equals(res.get("three").toArray(), new Integer[]{1}));
+    }
+
+    @Test
     public void testHyphenInWord() {
         res = t.lex("This is another hyphen-in-word");
         assertTrue(res.containsKey("hyphen-in-word"));
@@ -104,7 +148,7 @@ public class TokeniserTest {
 
     @Test
     public void testSentenceEnd() {
-        res = t.lex("This is the end ! The end, my friend");
+        res = t.lex("end ! end, my");
         assertTrue(Arrays.equals(res.get("end").toArray(), new Integer[]{0,1}));
     }
 
@@ -128,17 +172,6 @@ public class TokeniserTest {
         assertTrue(Arrays.equals(res.get("widely-used").toArray(), new Integer[]{2}));
         assertTrue(Arrays.equals(res.get("concordance").toArray(), new Integer[]{0,1,2}));
         assertTrue(Arrays.equals(res.get("we’d").toArray(), new Integer[]{0}));
-        DSAnalyser.printMap(res);
-    }
-
-    @Test 
-    public void testOrder() {
-        String text = "a b c e f";
-        res = t.lex(text);
-        String prevKey = res.firstKey();
-        for (String currentKey : res.keySet()){            
-            assertTrue(currentKey.compareTo(prevKey) >= 0);
-            prevKey = currentKey;
-        }
+        //System.out.println(res.toString());
     }
 }
