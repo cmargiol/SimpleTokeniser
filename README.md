@@ -1,7 +1,7 @@
 SimpleTokeniser
 ===============
 
-Very simple tokeniser built for an exercise. The goal is simple: for some given text build a "concordance". A concordance is an alphabetical list of all words in the text, with the frequency they appeared followed by citations on which sentence each word appears (word   {frequency:citations})
+The goal of the SimpleTokeniser is simple: for some given text build a "concordance". A concordance is an alphabetical list of all words in the text, with the frequency they appeared followed by citations on which sentence each word appears (word   {frequency:citations})
 
 For example, here's the output for: "_There are only two hard things in Computer Science. Cache invalidation and naming things._"
 
